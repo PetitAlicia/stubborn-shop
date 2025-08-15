@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page d'accueil{% endblock %}
+
+{% block body %}
+    <h1>Stubborn</h1>
+
+    <p class="center-text">Bienvenue chez Stubborn, la référence anglaise pour des sweat-shirts 
+    alliant style, confort et qualité. Située en plein cœur de Londres, notre marque reflète 
+    l'esprit urbain et une mode audacieuse, pour affirmer sa personnalité au quotidien.</p>
+
+    <h2>Nos meilleurs ventes</h2>
+
+    <section class="featured-sweatshirts">
+        <div class="sweatshirt-list">
+            {% for sweatshirt in featuredSweatshirts %}
+                <article class="sweatshirt-card">
+                    <img src="{{ asset('uploads/images/' ~ sweatshirt.image) }}" alt="Image de {{ sweatshirt.name }}" />
+                    <div class="sweatshirt-infos">
+                        <div class="sweatshirt-name-price">
+                            <p class="name">{{ sweatshirt.name }}</p>
+                            <p class="price">{{ sweatshirt.price|number_format(2, ',', ' ') }} €</p>
+                        </div>
+                        <div class="sweatshirt-button">
+                            {% if app.user %}
+                                <a href="{{ path('app_product_show', {'id': sweatshirt.id}) }}"><button>Voir</button></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

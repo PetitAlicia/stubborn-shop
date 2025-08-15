@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Boutique{% endblock %}
+
+{% block body %}
+    <h1>Boutique</h1>
+
+    <div class="products">
+        <form method="get" action="{{ path('app_products') }}">
+            <label for="price_range">Fourchette de prix</label>
+            <select id="price_range" name="price_range" onchange="this.form.submit()">
+                <option value="">Tous les prix</option>
+                <option value="10-29" {{ selectedFilter == '10-29' ? 'selected' : '' }}>10 à 29 €</option>
+                <option value="29-35" {{ selectedFilter == '29-35' ? 'selected' : '' }}>29 à 35 €</option>
+                <option value="35-50" {{ selectedFilter == '35-50' ? 'selected' : '' }}>35 à 50 €</option>
+            </select>
+        </form>
+
+        <div class="sweatshirt-list">
+            {% for sweatshirt in sweatshirts %}
+                <article class="sweatshirt-card">
+                        <img src="{{ asset('uploads/images/' ~ sweatshirt.image) }}" alt="Image de {{ sweatshirt.name }}" />
+                        <div class="sweatshirt-infos">
+                            <div class="sweatshirt-name-price">
+                                <p class="name">{{ sweatshirt.name }}</p>
+                                <p class="price">{{ sweatshirt.price|number_format(2, ',', ' ') }} €</p>
+                            </div>
+                            <div class="sweatshirt-button">
+                                {% if app.user %}
+                                    <a href="{{ path('app_product_show', {'id': sweatshirt.id}) }}"><button>Voir</button></a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </article>
+            {% else %}
+                <p>Aucun sweat-shirt trouvé pour ce filtre.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon panier{% endblock %}
+
+{% block body %}
+    <h1>Mon panier</h1>
+
+    {% if items is empty %}
+        <p class="center-text">Votre panier est vide.</p><br>
+        <a href="{{ path('app_products') }}" class="center-text">Continuer mes achats</a>
+    {% else %}
+        <table>
+            <thead id="cart-thead">
+                <tr>
+                    <th>Produit</th>
+                    <th>Nom</th>
+                    <th>Prix</th>
+                    <th>Taille</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set total = 0 %}
+                {% for item in items %}
+                    {% set subtotal = item.sweatshirt.price * item.quantity %}
+                    {% set total = total + subtotal %}
+                    <tr class="tr-cart">
+                        <td><img src="{{ asset('uploads/images/' ~ item.sweatshirt.image) }}" alt="Image de {{ item.sweatshirt.name }}" /></td>
+                        <td>{{ item.sweatshirt.name }}</td>
+                        <td>{{ subtotal|number_format(2, ',', ' ') }} €</td>
+                        <td>{{ item.size }}</td>
+                        <td>
+                            <form action="{{ path('app_cart_remove', {'id': item.sweatshirt.id, 'size': item.size}) }}" method="post" style="display:inline;">
+                                <button type="submit" onclick="return confirm('Retirer cet article du panier ?');">Retirer du panier</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tr id="tr-total" class="tr-cart">
+                    <td colspan="4" style="text-align:right;"><strong>Total :</strong></td>
+                    <td><strong>{{ total|number_format(2, ',', ' ') }} €</strong></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="cart-buttons">
+            <button id="buy-button" onclick="finalizePurchase()">Finaliser ma commande</button>
+            <button id="continue-button"><a href="{{ path('app_products') }}">Continuer mes achats</a></button>
+        </div>
+    {% endif %}
+
+    <script>
+        function finalizePurchase() {
+            if (confirm("Confirmez-vous votre achat ?")) {
+                window.location.href = "{{ path('app_cart_finalize') }}";
+            }
+        }
+    </script>
+
+{% endblock %}

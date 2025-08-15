@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+    <div class="login-register">
+        <p>S'inscrire</p>
+        <hr>
+
+        {{ form_start(registrationForm) }}
+            {{ form_row(registrationForm.username) }}
+            {{ form_row(registrationForm.email) }}
+            {{ form_row(registrationForm.deliveryAddress) }}
+            {{ form_row(registrationForm.plainPassword.first) }}
+            {{ form_row(registrationForm.plainPassword.second) }}
+
+            <button type="submit">Créer un compte</button>
+        {{ form_end(registrationForm) }}
+
+        <hr>
+        <p>Déjà inscrit ?</p>
+
+        <button id="login-register-button"><a href="{{ path('app_login') }}">
+            Se connecter
+        </a></button>
+    </div>
+
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="flash-{{ label }}">{{ message }}</div>
+        {% endfor %}
+    {% endfor %}
+{% endblock %}

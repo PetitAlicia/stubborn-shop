@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Back-Office{% endblock %}
+
+{% block body %}
+    <h1>Back-Office</h1>
+
+    <div class="admin-add" id="admin-add">
+        {{ form_start(addForm) }}
+            {{ form_widget(addForm) }}
+            <button id="add-button" type="submit">Ajouter</button>
+        {{ form_end(addForm) }}
+    </div>
+
+    <hr>
+
+    <table>
+        <thead id="admin-thead">
+            <tr>
+                <th>Image</th>
+                <th>Nom</th>
+                <th>Prix (€)</th>
+                <th>Stock XS</th>
+                <th>Stock S</th>
+                <th>Stock M</th>
+                <th>Stock L</th>
+                <th>Stock XL</th>
+                <th>En avant</th>
+                <th>Image</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="tbody-admin">
+            {% for sweatshirt in sweatshirts %}
+                <tr id="tr-admin">
+                    <td>
+                    <img src="{{ asset('uploads/images/' ~ sweatshirt.image) }}" alt="Image de {{ sweatshirt.name }}" />
+                    </td>
+                    <td colspan="8" class="admin-edit">
+                        {{ form_start(editForms[sweatshirt.id], {attr: {enctype: 'multipart/form-data'}}) }}
+                        {{ form_widget(editForms[sweatshirt.id]) }}
+                    </td>
+                    <td>
+                        <button class="admin-buttons" type="submit">Modifier</button>
+                        {{ form_end(editForms[sweatshirt.id]) }}
+
+                        <form method="post" action="{{ path('app_admin_delete', {'id': sweatshirt.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer ce sweat-shirt ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sweatshirt.id) }}">
+                            <button class="admin-buttons" type="submit">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="10">Aucun sweat-shirt trouvé.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
